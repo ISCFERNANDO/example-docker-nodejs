@@ -13,4 +13,4 @@ RUN npm install
 #copiamos el resto de los archivos, a excepcion de los que estan en .dockerignore
 COPY . .
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "build", "&&", "npm", "start" ]
