@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  db:
+    build: ./db
+    environment:
+      MYSQL_DATABASE: store_online
+      MYSQL_ROOT_PASSWORD: api-rest
+      MYSQL_USER: api-rest
+      MYSQL_PASSWORD: api-rest
+      MYSQL_DATABASE_HOST: db
+
+  api:
+    build: .
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: store_online
+      DB_USERNAME: store_online
+      DB_PASSWORD: store_online
+
+    ports:
+      - "3030:3000"
+    depends_on:
+      - db
+    restart: on-failure

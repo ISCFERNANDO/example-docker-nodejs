@@ -4,6 +4,8 @@ FROM node:14
 #crear directorio de trabajo
 WORKDIR /app
 
+EXPOSE 3000
+
 #copiamos los archivos package al directorio de trabajo
 COPY package*.json ./
 
@@ -13,4 +15,6 @@ RUN npm install
 #copiamos el resto de los archivos, a excepcion de los que estan en .dockerignore
 COPY . .
 
-CMD [ "npm", "build", "&&", "npm", "start" ]
+RUN npm build
+
+CMD [ "npm", "start" ]

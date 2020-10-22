@@ -1,7 +1,12 @@
 import app from "./app";
+import initModels from "./models/init-models";
+import Sequelize from "./utils/sequelize-connection";
 
 function main() {
-  app.listen(3000);
-  console.log("Server is running on port 3000");
+  const port = process.env.PORT || 3000;
+  app.listen(port);
+
+  console.log("Server is running on port ", port);
+  initModels(Sequelize);
 }
 main();
