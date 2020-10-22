@@ -1,80 +1,61 @@
-/* jshint indent: 2 */
+import { registration_status } from "./registration_status";
+import { access } from "./access";
+import { users } from "./users";
+import { DataTypes } from "sequelize";
+import {
+  Model,
+  Table,
+  PrimaryKey,
+  ForeignKey,
+  AllowNull,
+  Column,
+  BelongsTo,
+} from "sequelize-typescript";
+import { permits } from "./permits";
 
-import { DataTypes, Model, Sequelize } from "sequelize";
-
+@Table({ tableName: "user_accesses", timestamps: false })
 export class user_accesses extends Model {
+  @PrimaryKey
+  @ForeignKey(() => users)
+  @AllowNull(false)
+  @Column(DataTypes.INTEGER())
   id_user?: number;
+
+  @PrimaryKey
+  @ForeignKey(() => access)
+  @AllowNull(false)
+  @Column(DataTypes.INTEGER())
   id_access?: number;
+
+  @AllowNull(false)
+  @Column(DataTypes.DATE)
   created_at?: Date;
+
+  @AllowNull(true)
+  @Column(DataTypes.DATE)
   updated_at?: Date;
+
+  @AllowNull(false)
+  @Column(DataTypes.STRING(100))
   created_by?: string;
+
+  @AllowNull(true)
+  @Column(DataTypes.STRING(100))
   updated_by?: string;
+
+  @AllowNull(false)
+  @ForeignKey(() => registration_status)
+  @Column(DataTypes.INTEGER())
   status?: number;
+
+  @BelongsTo(() => registration_status)
+  registrationStatus?: registration_status;
+
+  @AllowNull(false)
+  @ForeignKey(() => permits)
+  @Column(DataTypes.INTEGER())
   permit_id?: number;
 
-  static initModel(sequelize: Sequelize) {
-    user_accesses.init(
-      {
-        id_user: {
-          type: DataTypes.INTEGER(),
-          allowNull: false,
-          primaryKey: true,
-          references: {
-            model: "users",
-            key: "id",
-          },
-        },
-        id_access: {
-          type: DataTypes.INTEGER(),
-          allowNull: false,
-          primaryKey: true,
-          references: {
-            model: "access",
-            key: "id",
-          },
-        },
-        created_at: {
-          type: DataTypes.DATE,
-          allowNull: false,
-          defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-        },
-        updated_at: {
-          type: DataTypes.DATE,
-          allowNull: true,
-        },
-        created_by: {
-          type: DataTypes.STRING(100),
-          allowNull: false,
-        },
-        updated_by: {
-          type: DataTypes.STRING(100),
-          allowNull: true,
-        },
-        status: {
-          type: DataTypes.INTEGER(),
-          allowNull: false,
-          references: {
-            model: "registration_status",
-            key: "id",
-          },
-          unique: "user_accesses_ibfk_3",
-        },
-        permit_id: {
-          type: DataTypes.INTEGER(),
-          allowNull: false,
-          references: {
-            model: "permits",
-            key: "id",
-          },
-          unique: "user_accesses_ibfk_4",
-        },
-      },
-      {
-        sequelize,
-        tableName: "user_accesses",
-        timestamps: false,
-      }
-    );
-    return user_accesses;
-  }
+  @BelongsTo(() => permits)
+  permit?: permits;
 }

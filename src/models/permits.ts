@@ -1,42 +1,30 @@
-/* jshint indent: 2 */
+import {
+  Model,
+  Column,
+  PrimaryKey,
+  Table,
+  AutoIncrement,
+  AllowNull,
+} from "sequelize-typescript";
+import { DataTypes } from "sequelize";
 
-import { DataTypes, Model, Sequelize } from "sequelize";
-
+@Table({ tableName: "permits", timestamps: false })
 export class permits extends Model {
+  @PrimaryKey
+  @AutoIncrement
+  @AllowNull(false)
+  @Column(DataTypes.INTEGER())
   id?: number;
-  name?: string;
-  created_at?: Date;
-  updated_at?: Date;
 
-  static initModel(sequelize: Sequelize) {
-    permits.init(
-      {
-        id: {
-          autoIncrement: true,
-          type: DataTypes.INTEGER(),
-          allowNull: false,
-          primaryKey: true,
-        },
-        name: {
-          type: DataTypes.STRING(60),
-          allowNull: false,
-        },
-        created_at: {
-          type: DataTypes.DATE,
-          allowNull: false,
-          defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-        },
-        updated_at: {
-          type: DataTypes.DATE,
-          allowNull: true,
-        },
-      },
-      {
-        sequelize,
-        tableName: "permits",
-        timestamps: false,
-      }
-    );
-    return permits;
-  }
+  @AllowNull(false)
+  @Column(DataTypes.STRING(60))
+  name?: string;
+
+  @AllowNull(false)
+  @Column(DataTypes.DATE)
+  created_at?: Date;
+
+  @AllowNull(true)
+  @Column(DataTypes.DATE)
+  updated_at?: Date;
 }

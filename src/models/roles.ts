@@ -1,73 +1,63 @@
-/* jshint indent: 2 */
+import { registration_status } from "./registration_status";
+import {
+  BelongsTo,
+  Model,
+  Table,
+  Column,
+  PrimaryKey,
+  AutoIncrement,
+  AllowNull,
+  ForeignKey,
+  BelongsToMany,
+} from "sequelize-typescript";
+import { DataTypes } from "sequelize";
+import { access } from "./access";
+import { role_accesses } from "./role_accesses";
 
-import { DataTypes, Model, Sequelize } from "sequelize";
-
+@Table({ tableName: "roles", timestamps: false })
 export class roles extends Model {
+  @PrimaryKey
+  @AutoIncrement
+  @AllowNull(false)
+  @Column(DataTypes.INTEGER())
   id?: number;
+
+  @AllowNull(false)
+  @Column(DataTypes.STRING(60))
   name?: string;
+
+  @AllowNull(true)
+  @Column(DataTypes.STRING(200))
   description?: string;
+
+  @AllowNull(false)
+  @Column(DataTypes.DATE)
   created_at?: Date;
+
+  @AllowNull(true)
+  @Column(DataTypes.DATE)
   updated_at?: Date;
+
+  @AllowNull(false)
+  @Column(DataTypes.STRING(100))
   created_by?: string;
+
+  @AllowNull(true)
+  @Column(DataTypes.STRING(100))
   updated_by?: string;
+
+  @AllowNull(false)
+  @Column(DataTypes.BOOLEAN)
   is_system?: boolean;
+
+  @AllowNull(false)
+  @ForeignKey(() => registration_status)
+  @Column(DataTypes.INTEGER())
   status?: number;
 
-  static initModel(sequelize: Sequelize) {
-    roles.init(
-      {
-        id: {
-          autoIncrement: true,
-          type: DataTypes.INTEGER(),
-          allowNull: false,
-          primaryKey: true,
-        },
-        name: {
-          type: DataTypes.STRING(60),
-          allowNull: false,
-        },
-        description: {
-          type: DataTypes.STRING(200),
-          allowNull: true,
-        },
-        created_at: {
-          type: DataTypes.DATE,
-          allowNull: false,
-          defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-        },
-        updated_at: {
-          type: DataTypes.DATE,
-          allowNull: true,
-        },
-        created_by: {
-          type: DataTypes.STRING(100),
-          allowNull: false,
-        },
-        updated_by: {
-          type: DataTypes.STRING(100),
-          allowNull: true,
-        },
-        is_system: {
-          type: DataTypes.BOOLEAN,
-          allowNull: false,
-          defaultValue: true,
-        },
-        status: {
-          type: DataTypes.INTEGER(),
-          allowNull: false,
-          references: {
-            model: "registration_status",
-            key: "id",
-          },
-          unique: "roles_ibfk_1",
-        },
-      },
-      {
-        sequelize,
-        tableName: "roles",
-        timestamps: false,
-      }
-    );
-    return roles;
-  }
+  @BelongsTo(() => registration_status)
+  registrationStatus?: registration_status;
+
+  @BelongsToMany(() => access, () => role_accesses)
+  access?: access[];
 }
