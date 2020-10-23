@@ -22,61 +22,61 @@ export class users extends Model {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataTypes.INTEGER())
-  id?: number;
+  id!: number;
 
   @AllowNull(false)
   @Column(DataTypes.STRING(40))
-  name?: string;
+  name!: string;
 
   @AllowNull(false)
   @Column(DataTypes.STRING(40))
-  firstSurname?: string;
+  firstSurname!: string;
 
   @AllowNull(true)
   @Column(DataTypes.STRING(40))
-  secondSurname?: string;
+  secondSurname!: string;
 
   @AllowNull(true)
   @Column(DataTypes.INTEGER())
-  age?: number;
+  age!: number;
 
   @AllowNull(false)
   @Unique
   @Column(DataTypes.STRING(100))
-  email?: string;
+  email!: string;
 
   @AllowNull(true)
   @ForeignKey(() => roles)
   @Column(DataTypes.INTEGER())
-  id_rol?: number;
+  id_rol!: number;
 
   @BelongsTo(() => roles)
-  rol?: roles;
+  rol!: roles;
 
   @AllowNull(false)
   @Column(DataTypes.DATE)
-  created_at?: Date;
+  created_at!: Date;
 
   @AllowNull(true)
   @Column(DataTypes.DATE)
-  updated_at?: Date;
+  updated_at!: Date;
 
   @AllowNull(false)
   @Column(DataTypes.STRING(100))
-  created_by?: string;
+  created_by!: string;
 
   @AllowNull(true)
   @Column(DataTypes.STRING(100))
-  updated_by?: string;
+  updated_by!: string;
 
   @AllowNull(false)
   @ForeignKey(() => registration_status)
   @Column(DataTypes.INTEGER())
-  status?: number;
+  status!: number;
 
   @BelongsTo(() => registration_status)
-  registrationStatus?: registration_status;
+  registrationStatus!: registration_status;
 
   @BelongsToMany(() => access, () => user_accesses)
-  access?: access[];
+  access!: access[];
 }

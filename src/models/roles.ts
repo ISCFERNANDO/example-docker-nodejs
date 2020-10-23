@@ -20,44 +20,44 @@ export class roles extends Model {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataTypes.INTEGER())
-  id?: number;
+  id!: number;
 
   @AllowNull(false)
   @Column(DataTypes.STRING(60))
-  name?: string;
+  name!: string;
 
   @AllowNull(true)
   @Column(DataTypes.STRING(200))
-  description?: string;
+  description!: string;
 
   @AllowNull(false)
   @Column(DataTypes.DATE)
-  created_at?: Date;
+  created_at!: Date;
 
   @AllowNull(true)
   @Column(DataTypes.DATE)
-  updated_at?: Date;
+  updated_at!: Date;
 
   @AllowNull(false)
   @Column(DataTypes.STRING(100))
-  created_by?: string;
+  created_by!: string;
 
   @AllowNull(true)
   @Column(DataTypes.STRING(100))
-  updated_by?: string;
+  updated_by!: string;
 
   @AllowNull(false)
   @Column(DataTypes.BOOLEAN)
-  is_system?: boolean;
+  is_system!: boolean;
 
   @AllowNull(false)
   @ForeignKey(() => registration_status)
   @Column(DataTypes.INTEGER())
-  status?: number;
+  status!: number;
 
   @BelongsTo(() => registration_status)
-  registrationStatus?: registration_status;
+  registrationStatus!: registration_status;
 
   @BelongsToMany(() => access, () => role_accesses)
-  access?: access[];
+  access!: access[];
 }

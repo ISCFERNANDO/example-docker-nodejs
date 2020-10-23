@@ -14,17 +14,17 @@ export class permits extends Model {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataTypes.INTEGER())
-  id?: number;
+  id!: number;
 
   @AllowNull(false)
   @Column(DataTypes.STRING(60))
-  name?: string;
+  name!: string;
 
   @AllowNull(false)
   @Column(DataTypes.DATE)
-  created_at?: Date;
+  created_at!: Date;
 
   @AllowNull(true)
   @Column(DataTypes.DATE)
-  updated_at?: Date;
+  updated_at!: Date;
 }

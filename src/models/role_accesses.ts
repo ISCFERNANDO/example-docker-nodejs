@@ -19,43 +19,43 @@ export class role_accesses extends Model {
   @ForeignKey(() => roles)
   @AllowNull(false)
   @Column(DataTypes.INTEGER())
-  id_rol?: number;
+  id_rol!: number;
 
   @PrimaryKey
   @ForeignKey(() => access)
   @AllowNull(false)
   @Column(DataTypes.INTEGER())
-  id_access?: number;
+  id_access!: number;
 
   @AllowNull(false)
   @Column(DataTypes.DATE)
-  created_at?: Date;
+  created_at!: Date;
 
   @AllowNull(true)
   @Column(DataTypes.DATE)
-  updated_at?: Date;
+  updated_at!: Date;
 
   @AllowNull(false)
   @Column(DataTypes.STRING(100))
-  created_by?: string;
+  created_by!: string;
 
   @AllowNull(true)
   @Column(DataTypes.STRING(100))
-  updated_by?: string;
+  updated_by!: string;
 
   @AllowNull(false)
   @ForeignKey(() => registration_status)
   @Column(DataTypes.INTEGER())
-  status?: number;
+  status!: number;
 
   @BelongsTo(() => registration_status)
-  registrationStatus?: registration_status;
+  registrationStatus!: registration_status;
 
   @AllowNull(false)
   @ForeignKey(() => permits)
   @Column(DataTypes.INTEGER())
-  permit_id?: number;
+  permit_id!: number;
 
   @BelongsTo(() => permits)
-  permit?: permits;
+  permit!: permits;
 }

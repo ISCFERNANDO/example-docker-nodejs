@@ -1,9 +1,9 @@
+import { Access } from "src/dto/access";
 import { registration_status } from "./../models/registration_status";
 import { Sequelize } from "sequelize";
-import { Access } from "src/dto/access";
 import { RegistrationStatusEnum } from "../enums/registration-status.enum";
-import { ACCESS } from "../constants/constants.json";
 import { access } from "../models/access";
+import { InternalServerError } from "../exceptions/error-handler";
 
 export class AccessRepository {
   private static instance: AccessRepository;
@@ -17,8 +17,8 @@ export class AccessRepository {
     return this.instance;
   }
 
-  public async findAll(): Promise<Access[]> {
-    const listOfaccesses: access[] = await access.findAll({
+  public async findActiveAccess(): Promise<access[]> {
+    return access.findAll({
       attributes: ["id", "name", "description"],
       include: [
         {
@@ -28,46 +28,79 @@ export class AccessRepository {
           required: true,
         },
       ],
-      where: {
-        status: RegistrationStatusEnum.ACTIVE,
-      },
+      where: { status: RegistrationStatusEnum.ACTIVE },
     });
-    return listOfaccesses.map((item) => this.mapModelToDto(item));
   }
 
-  public async findOne(id: number): Promise<Access> {
-    const data: access | null = await access.findOne({
-      where: {
-        id,
-        status: RegistrationStatusEnum.ACTIVE,
-      },
+  public async findAll(): Promise<access[]> {
+    return access.findAll({
+      attributes: ["id", "name", "description"],
+      include: [
+        {
+          attributes: ["id", "name"],
+          model: registration_status,
+          where: { id: Sequelize.col("registrationStatus.id") },
+          required: true,
+        },
+      ],
     });
-    if (!data) {
-      throw new Error(ACCESS.NOT_FOUND);
+  }
+
+  public async findOne(id: number): Promise<access> {
+    try {
+      return access.findOne({
+        include: [
+          {
+            attributes: ["id", "name"],
+            model: registration_status,
+            where: { id: Sequelize.col("registrationStatus.id") },
+            required: true,
+          },
+        ],
+        where: { id },
+      });
+    } catch (error) {
+      throw new InternalServerError();
     }
-    return this.mapModelToDto(data);
   }
 
-  public async add(newAccess: Access): Promise<Access> {
-    const accessCreated: access = await access.create({
+  public async findByName(name: string): Promise<access> {
+    try {
+      return access.findOne({
+        attributes: ["id", "name", "description", "status"],
+        where: { name },
+      });
+    } catch (error) {
+      throw new InternalServerError();
+    }
+  }
+
+  public async add(newAccess: Access): Promise<access> {
+    return access.create({
       name: newAccess.name,
       description: newAccess.description,
       status: RegistrationStatusEnum.ACTIVE,
       created_by: "administrador",
     });
-    newAccess.id = accessCreated.id || 0;
-    return newAccess;
   }
 
-  private mapModelToDto(model: access): Access {
-    return {
-      id: model.id,
-      name: model.name,
-      description: model.description,
-      status: {
-        id: model.registrationStatus?.id,
-        name: model.registrationStatus?.name,
+  public async update(newAccess: Access, id: number): Promise<void> {
+    await access.update(
+      {
+        name: newAccess.name,
+        description: newAccess.description,
+        updated_by: "administrador",
       },
-    };
+      { where: { id } }
+    );
+  }
+
+  public async delete(id: number): Promise<void> {
+    await access.update(
+      {
+        status: RegistrationStatusEnum.DELETED,
+      },
+      { where: { id } }
+    );
   }
 }
